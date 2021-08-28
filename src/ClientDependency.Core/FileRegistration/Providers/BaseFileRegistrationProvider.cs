@@ -294,6 +294,17 @@ namespace ClientDependency.Core.FileRegistration.Providers
                     var resolvedPath = path.ResolvePath(http);
                     var basePath = resolvedPath.EndsWith("/") ? resolvedPath : resolvedPath + "/";
                     dependency.FilePath = basePath + dependency.FilePath;
+
+                    //START persian-dnnsoftware
+                    if ((System.Globalization.CultureInfo.CurrentCulture.TextInfo.IsRightToLeft && dependency.FilePath.Contains(".css")) && !dependency.FilePath.Contains("http"))
+                    {
+                        string locfile = dependency.FilePath.Replace(".css", ".rtl.css");
+                        if (System.IO.File.Exists(HttpContext.Current.Server.MapPath(locfile)))
+                            dependency.FilePath = locfile;
+                    }
+                    //END persian-dnnsoftware
+
+
                     dependency.ForceBundle = (dependency.ForceBundle | path.ForceBundle);
                 }
                 else
